@@ -1,3 +1,4 @@
+from tkinter import filedialog
 #las villas deportivas, alojan a las selecciones
 #varias selecciones pueden estar en la misma villa
 #no se pueden alojar dos o mas selecciones que no tengan relaciones diplomaticas amistosas
@@ -6,6 +7,14 @@
 #la salida de los datos es una matriz (s) de n x m (filas y columnas), n son las villas a construir y m las diferentes selecciones, donde s[i][j] = 1 si la selección i esta alojada en la villa j, en otro caso s[i][j] = 0
 
 #lee el archivo de texto plano .txt
+def ubicaciontxt():
+    filename = filedialog.askopenfilename(
+        filetypes=(
+            ("Archivos de texto", "*.txt"),
+        )
+    )
+    return filename
+
 def leer_matriz(filename):
     with open(filename, 'r') as archivo:
         contenido = archivo.read().strip()
@@ -19,25 +28,30 @@ def contar_columnas(matriz):
 
 def colorear_grafo(matriz):
     n = len(matriz)
-    color = [-1] * n
-    color[0] = 0
-    disponible = [True] * n
-    
+    color = [-1] * n # Inicializa el color de cada selección a -1 (sin color)
+    color[0] = 0  #Asigna el primer color (0) a la primera selección
+    disponible = [True] * n # Inicializa todos los colores como disponibles
+    #u representa el índice de la selección actual
+    #i representa el índice de la selección en el bucle interior for dentro del bucle que controla u.
+
     for u in range(1, n):
+        # Marca los colores que no están disponibles debido a selecciones adyacentes ya coloreadas
         for i in range(n):
             if matriz[u][i] == 1 and color[i] != -1:
                 disponible[color[i]] = False
-        
+        # Encuentra el primer color disponible
         cr = 0
-        while cr < n:
-            if disponible[cr]:
+        while cr < n: #Este bucle while encuentra el primer color disponible (disponible[cr] == True).
+            if disponible[cr]:#Cuando encuentra un color disponible, lo asigna a la selección u (color[u] = cr).
                 break
-            cr += 1
-        
+            cr += 1 
+        # Asigna el primer color disponible a la selección u
         color[u] = cr
-        disponible = [True] * n
-    
-    max_color = max(color) + 1
+        
+        # Restaura la disponibilidad de los colores para la próxima iteración
+        disponible = [True] * n #Restaura la disponibilidad de todos los colores para la siguiente iteración. Esto asegura que cada selección pueda ser evaluada con todos los colores disponibles nuevamente.
+    # Determina el número máximo de colores utilizados
+    max_color = max(color) + 1 #max_color calcula el número máximo de colores utilizados sumándole 1 al valor máximo en la lista color (ya que los colores comienzan en 0).
     return color, max_color
 
 def crear_matriz_s(color, max_color, n):
@@ -52,16 +66,10 @@ def escribir_matriz(filename, matriz):
             archivo.write(' '.join(map(str, fila)) + '\n')
 
 def main():
-    matriz = leer_matriz('entrada.txt')
+    matriz = leer_matriz(ubicaciontxt())
     n = contar_columnas(matriz)
-    
     color, max_color = colorear_grafo(matriz)
     matriz_s = crear_matriz_s(color, max_color, n)
-    
     escribir_matriz('salida.txt', matriz_s)
-
 main()
 
-#nota: no se declara la cantidad de selecciones maximas por villa, podriamos tratar de ingresar de 3 a 2 selecciones por villa
-#idea de resolverlo con arboles binarios de busqueda, donde el nodo h-1 sea la villa y los nodos h sean las selecciones
-#con respecto a lo anterior entonces cada nodo h-2 para atras define quien puede estar en la misma villa
