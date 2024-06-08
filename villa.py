@@ -8,7 +8,7 @@ from customtkinter import *
 #la salida de los datos es una matriz (s) de n x m (filas y columnas), n son las villas a construir y m las diferentes selecciones, donde s[i][j] = 1 si la selección i esta alojada en la villa j, en otro caso s[i][j] = 0
 
 #lee el archivo de texto plano .txt
-def ubicaciontxt():#acceder al archivo de texto plano
+def ubicaciontxt():#filename ruta del archivo
     filename = filedialog.askopenfilename(
         filetypes=(
             ("Archivos de texto", "*.txt"),
@@ -80,28 +80,31 @@ def escribir_matriz(filename, matriz):#escribe la matriz en el archivo de texto 
 
 
 def main(app):#funcion principal
-    print("Selecciona el archivo")
-    archivo = ubicaciontxt()
-    if not archivo:
-        print("No se ha seleccionado ningún archivo.")
-        return
+    try:
+        print("Selecciona el archivo")
+        archivo = ubicaciontxt()
+        if not archivo:
+            print("No se ha seleccionado ningún archivo.")
+            return
 
-    matriz = leer_matriz(archivo)
-    if not matriz:
-        print("La matriz no pudo ser leída o estaba vacía.")
-        return
+        matriz = leer_matriz(archivo)
+        if not matriz:
+            print("La matriz no pudo ser leída o estaba vacía.")
+            return
 
-    n = contar_columnas(matriz)
-    color, max_color = colorear_grafo(matriz)
-    matriz_s = crear_matriz_s(color, max_color, n)
-    escribir_matriz('salida.txt', matriz_s)
-    contenido_salida = open('salida.txt', 'r').read()
-    print(contenido_salida)  # Para verificar el contenido de salida.txt
+        n = contar_columnas(matriz)
+        color, max_color = colorear_grafo(matriz)
+        matriz_s = crear_matriz_s(color, max_color, n)
+        escribir_matriz('salida.txt', matriz_s)
+        contenido_salida = open('salida.txt', 'r').read()
+        #print(contenido_salida)  # Para verificar el contenido de salida.txt
 
-    # Cierra la ventana de la aplicación
-    app.destroy()
+        # Cierra la ventana de la aplicación
+        app.etiqueta = CTkLabel(app, text=contenido_salida)
+        app.etiqueta.pack(pady=20)()
 
-    # Abre el archivo de salida en el programa predeterminado del sistema
-    os.startfile('salida.txt')
-    
+        # Abre el archivo de salida en el programa predeterminado del sistema
+        os.startfile('salida.txt')
+    except Exception as e:
+        print("")
 vista()
