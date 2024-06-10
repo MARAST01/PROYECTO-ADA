@@ -1,5 +1,9 @@
 from tkinter import filedialog
 from customtkinter import *
+from PIL import Image, ImageTk, ImageEnhance
+from tkinter import PhotoImage
+import time
+import tkinter as tk
 #las villas deportivas, alojan a las selecciones
 #varias selecciones pueden estar en la misma villa
 #no se pueden alojar dos o mas selecciones que no tengan relaciones diplomaticas amistosas
@@ -17,11 +21,115 @@ def ubicaciontxt():#filename ruta del archivo
     return filename
 
 def vista():#vista de la aplicacion
-    app = CTk()
-    app.geometry("500x500")
-    btn = CTkButton(master=app, text="Seleccionar archivo", command=lambda: main(app))
-    btn.place(relx=0.5, rely=0.5, anchor="center")
-    app.mainloop()
+    ventana = CTk()
+    ventana.title("Proyecto Final de ADA")
+    ventana.configure(bg= "#051923")
+    ventana.geometry("700x480")
+    ventana.resizable(width=False, height=False)
+
+    #Colores
+    azulMuyClaro = "#91e5f6"
+    azulOscuro = "#051923"
+    azulMasOscuro = "#003554"
+    azulClaro = "#006494"
+    AzulMasClaro = "#0582ca"
+    AzulVerdoso= "#00a6fb"
+
+    #elementos dentro de la ventana
+    imagenAbrir = Image.open("abrir.png")
+    imagenMostrar = Image.open("mostrar.png")
+
+    frame = CTkFrame(master=ventana, width=350, height=480, fg_color= azulMuyClaro)
+    frame.pack_propagate(0)
+    frame.pack(expand=True, side="right")
+
+    mensajeBienvenida= CTkLabel(master=frame, text="¡Bienvenido!", 
+                                text_color="#119da4", anchor="w", justify="left", font=("Segoe UI Black", 40)).pack(anchor="center", pady=(40, 30), padx=(10, 10))
+
+    contenedor_pequeno= CTkFrame(master=frame, fg_color="#48cae4", border_color="#00b4d8", border_width=2)
+    contenedor_pequeno.pack_propagate(3)
+    contenedor_pequeno.pack(expand=True, fill="y", side= "top")
+
+    MensajeInspirador=CTkLabel(master=contenedor_pequeno, 
+                               text="Un pequeño país en Oriente Medio, un gran escenario \n para la gloria deportiva mundial."
+                               ,text_color="#023e8a", anchor="w", justify="center", font=("Comic Sans MS", 12)).pack(anchor="center", 
+                                                                                                                     padx=(5, 5))
+
+    botonCargar= CTkButton(master=contenedor_pequeno, text="Cargar archivo", fg_color = AzulMasClaro, 
+                           border_color=azulClaro, border_width=4, corner_radius=10, 
+                           hover_color=AzulVerdoso, 
+                           font=("Segoe UI Black", 16), text_color=azulClaro, 
+                           width=350,command=lambda: main(contenedor_pequeno),
+                           image=CTkImage(dark_image=imagenAbrir, light_image=imagenAbrir)).pack(anchor="center", 
+                                                                                                 pady=(10, 10), 
+                                                                                                 padx=(25, 25))
+    botonMostrar= CTkButton(master=contenedor_pequeno, text="Mostrar archivo", fg_color = AzulMasClaro, 
+                           border_color=azulClaro, border_width=4, corner_radius=10, 
+                           hover_color=AzulVerdoso, 
+                           font=("Segoe UI Black", 16), text_color=azulClaro, 
+                           width=350,
+                           image=CTkImage(dark_image=imagenMostrar, light_image=imagenMostrar)).pack(anchor="center", 
+                                                                                                 pady=(10, 10), 
+                                                                                                 padx=(25, 25))
+
+    ########################################################################
+    #Función para los gifs
+    def show_animated_gifs(gif_paths, size=(452, 480), opacity=0.5, switch_delay=5000, frame_delay=100):
+        # Lista para almacenar los frames de cada GIF
+        gifs = []
+        for gif_path in gif_paths:
+            frames = []
+            gif_image = Image.open(gif_path)
+            try:
+                while True:
+                    frame = gif_image.copy().resize(size, Image.BICUBIC)
+                    # Convertir a 'RGBA' para manejar la opacidad
+                    frame = frame.convert("RGBA")
+                    # Modificar la opacidad
+                    alpha = frame.split()[3]
+                    alpha = ImageEnhance.Brightness(alpha).enhance(opacity)
+                    frame.putalpha(alpha)
+                    frames.append(ImageTk.PhotoImage(frame))
+                    gif_image.seek(len(frames))  # Mover al siguiente frame
+            except EOFError:
+                gifs.append(frames)
+
+        # Crear un label para mostrar los GIFs y hacer que el fondo sea negro
+        label = tk.Label(ventana, bg='black', highlightthickness=0)
+        label.pack(anchor='w')  # Alinear a la izquierda con un pequeño espacio
+
+        current_gif_index = [0]
+        current_frame_index = [0]
+
+        # Función para actualizar el frame del GIF actual
+        def update_frame():
+            frames = gifs[current_gif_index[0]]
+            frame = frames[current_frame_index[0]]
+            label.configure(image=frame)
+            current_frame_index[0] = (current_frame_index[0] + 1) % len(frames)
+            ventana.after(frame_delay, update_frame)
+
+        # Función para cambiar al siguiente GIF
+        def switch_gif():
+            current_gif_index[0] = (current_gif_index[0] + 1) % len(gif_paths)
+            current_frame_index[0] = 0
+            ventana.after(switch_delay, switch_gif)
+
+        # Iniciar la animación del primer GIF
+        ventana.after(0, update_frame)
+        # Programar el cambio de GIFs
+        ventana.after(switch_delay, switch_gif)
+
+    # Llamar a la función con la lista de rutas de tus GIFs
+    show_animated_gifs(
+        ["baloncesto_pixel.gif", "futbol_pixel.gif", "beisbol_pixel.gif", "atletismo_pixel.gif", "villa_pixel_hermosa.gif"], 
+        size=(460, 480), 
+        opacity=0.5, 
+        switch_delay=600, 
+        frame_delay=100
+    )
+    #####################################
+    ventana.mainloop()
     
 
 def leer_matriz(filename):#lee la matriz del archivo de texto plano
@@ -79,7 +187,7 @@ def escribir_matriz(filename, matriz):#escribe la matriz en el archivo de texto 
             archivo.write(' '.join(map(str, fila)) + '\n')
 
 
-def main(app):#funcion principal
+def main(contenedor_pequeno):#funcion principal
     try:
         print("Selecciona el archivo")
         archivo = ubicaciontxt()
@@ -100,8 +208,10 @@ def main(app):#funcion principal
         #print(contenido_salida)  # Para verificar el contenido de salida.txt
 
         # Cierra la ventana de la aplicación
-        app.etiqueta = CTkLabel(app, text=contenido_salida)
-        app.etiqueta.pack(pady=20)()
+        uwu=CTkLabel(master=contenedor_pequeno, 
+                               text=contenido_salida
+                               ,text_color="#023e8a", anchor="w", justify="center", font=("Comic Sans MS", 12)).pack(anchor="center", 
+                                                                                                                     padx=(5, 5), pady=(11, 11))
 
         # Abre el archivo de salida en el programa predeterminado del sistema
         os.startfile('salida.txt')
