@@ -58,7 +58,7 @@ def vista(contenido,contenido_salida):#vista de la aplicacion
                            border_color=azulClaro, border_width=4, corner_radius=10, 
                            hover_color=AzulVerdoso, 
                            font=("Segoe UI Black", 16), text_color=azulClaro, 
-                           width=350,command=lambda: main(contenedor_pequeno,contenido),
+                           width=350,command=lambda: [(contenedor_pequeno.destroy), main(contenedor_pequeno, contenido)],
                            image=CTkImage(dark_image=imagenAbrir, light_image=imagenAbrir)).pack(anchor="center", 
                                                                                                  pady=(10, 10), 
                                                                                                  padx=(25, 25))
