@@ -200,12 +200,13 @@ def main(contenedor_pequeno,contenido):#funcion principal
         
 
         # Cierra la ventana de la aplicación
+
         mostrarentrada=CTkLabel(master=contenedor_pequeno, 
-                               text=contenido
+                               text="entrada\n"+contenido
                                ,text_color="#023e8a", anchor="w", justify="center", font=("Comic Sans MS", 12)).pack(anchor="center", 
                                                                                                                      padx=(5, 5), pady=(10, 10))
         mostrarsalida = CTkLabel(master=contenedor_pequeno, 
-                            text=contenido_salida
+                            text="salida\n"+contenido_salida
                             ,text_color="#023e8a", anchor="w", justify="center", font=("Comic Sans MS", 12)).pack(anchor="center", padx=(5, 5), pady=(16, 16))
         
         # Abre el archivo de salida en el programa predeterminado del sistema
