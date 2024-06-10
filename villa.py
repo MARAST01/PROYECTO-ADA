@@ -11,6 +11,7 @@ import tkinter as tk
 #la entrada de los datos es una matriz cuadrada (m) de 1 y 0 en archivo de texto plano, donde m[i][j] = 1 si las selecciones i y j no tienen relaciones diplomaticas amistosas, en otro caso m[i][j] = 0
 #la salida de los datos es una matriz (s) de n x m (filas y columnas), n son las villas a construir y m las diferentes selecciones, donde s[i][j] = 1 si la selección i esta alojada en la villa j, en otro caso s[i][j] = 0
 
+
 #lee el archivo de texto plano .txt
 def ubicaciontxt():#filename ruta del archivo
     filename = filedialog.askopenfilename(
@@ -20,17 +21,15 @@ def ubicaciontxt():#filename ruta del archivo
     ) 
     return filename
 
-def vista(contenido,contenido_salida):#vista de la aplicacion
+def vista(contenido):#vista de la aplicacion
     ventana = CTk()
     ventana.title("Proyecto Final de ADA")
     ventana.configure(bg= "#051923")
-    ventana.geometry("700x480")
+    ventana.geometry("900x480")
     ventana.resizable(width=False, height=False)
 
     #Colores
     azulMuyClaro = "#91e5f6"
-    azulOscuro = "#051923"
-    azulMasOscuro = "#003554"
     azulClaro = "#006494"
     AzulMasClaro = "#0582ca"
     AzulVerdoso= "#00a6fb"
@@ -39,15 +38,15 @@ def vista(contenido,contenido_salida):#vista de la aplicacion
     imagenAbrir = Image.open("abrir.png")
     imagenMostrar = Image.open("mostrar.png")
 
-    frame = CTkFrame(master=ventana, width=350, height=480, fg_color= azulMuyClaro)
+    frame = CTkFrame(master=ventana, width=515, height=550, fg_color= azulMuyClaro)
     frame.pack_propagate(0)
     frame.pack(expand=True, side="right")
 
     mensajeBienvenida= CTkLabel(master=frame, text="¡Bienvenido!", 
                             text_color="#119da4", anchor="w", justify="left", font=("Segoe UI Black", 40)).pack(anchor="center", pady=(40, 30), padx=(10, 10))
-    contenedor_pequeno= CTkFrame(master=frame, fg_color="#48cae4", border_color="#00b4d8", border_width=2)
+    contenedor_pequeno= CTkScrollableFrame(master=frame,width=400, height=480, fg_color="#48cae4", border_color="#00b4d8", border_width=2)
     contenedor_pequeno.pack_propagate(3)
-    contenedor_pequeno.pack(expand=True, fill="y", side= "top")
+    contenedor_pequeno.pack(expand=True,fill="y", side= "top")
 
     MensajeInspirador=CTkLabel(master=contenedor_pequeno, 
                                text="Un pequeño país en Oriente Medio, un gran escenario \n para la gloria deportiva mundial."
@@ -58,7 +57,7 @@ def vista(contenido,contenido_salida):#vista de la aplicacion
                            border_color=azulClaro, border_width=4, corner_radius=10, 
                            hover_color=AzulVerdoso, 
                            font=("Segoe UI Black", 16), text_color=azulClaro, 
-                           width=350,command=lambda: [(contenedor_pequeno.destroy), main(contenedor_pequeno, contenido)],
+                           width=400,command=lambda: [(contenedor_pequeno.destroy), main(contenedor_pequeno, contenido)],
                            image=CTkImage(dark_image=imagenAbrir, light_image=imagenAbrir)).pack(anchor="center", 
                                                                                                  pady=(10, 10), 
                                                                                                  padx=(25, 25))
@@ -179,9 +178,9 @@ def escribir_matriz(filename, matriz):#escribe la matriz en el archivo de texto 
             archivo.write(' '.join(map(str, fila)) + '\n')
 
 
+
 def main(contenedor_pequeno,contenido):#funcion principal
     try:
-        print("Selecciona el archivo")
         archivo = ubicaciontxt()
         if not archivo:
             print("No se ha seleccionado ningún archivo.")
@@ -199,12 +198,14 @@ def main(contenedor_pequeno,contenido):#funcion principal
         contenido_salida = open('salida.txt', 'r').read()
         #print(contenido_salida)  # Para verificar el contenido de salida.txt
         
+        
+
         # Cierra la ventana de la aplicación
-        uwu=CTkLabel(master=contenedor_pequeno, 
+        mostrarentrada=CTkLabel(master=contenedor_pequeno, 
                                text=contenido
                                ,text_color="#023e8a", anchor="w", justify="center", font=("Comic Sans MS", 12)).pack(anchor="center", 
                                                                                                                      padx=(5, 5), pady=(10, 10))
-        maulopez = CTkLabel(master=contenedor_pequeno, 
+        mostrarsalida = CTkLabel(master=contenedor_pequeno, 
                             text=contenido_salida
                             ,text_color="#023e8a", anchor="w", justify="center", font=("Comic Sans MS", 12)).pack(anchor="center", padx=(5, 5), pady=(16, 16))
         
@@ -214,6 +215,6 @@ def main(contenedor_pequeno,contenido):#funcion principal
     except Exception as e:
         print("")
 
-vista("","")
+vista("")
     
 
