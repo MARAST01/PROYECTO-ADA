@@ -20,7 +20,7 @@ def ubicaciontxt():#filename ruta del archivo
     ) 
     return filename
 
-def vista():#vista de la aplicacion
+def vista(contenido,contenido_salida):#vista de la aplicacion
     ventana = CTk()
     ventana.title("Proyecto Final de ADA")
     ventana.configure(bg= "#051923")
@@ -44,8 +44,7 @@ def vista():#vista de la aplicacion
     frame.pack(expand=True, side="right")
 
     mensajeBienvenida= CTkLabel(master=frame, text="¡Bienvenido!", 
-                                text_color="#119da4", anchor="w", justify="left", font=("Segoe UI Black", 40)).pack(anchor="center", pady=(40, 30), padx=(10, 10))
-
+                            text_color="#119da4", anchor="w", justify="left", font=("Segoe UI Black", 40)).pack(anchor="center", pady=(40, 30), padx=(10, 10))
     contenedor_pequeno= CTkFrame(master=frame, fg_color="#48cae4", border_color="#00b4d8", border_width=2)
     contenedor_pequeno.pack_propagate(3)
     contenedor_pequeno.pack(expand=True, fill="y", side= "top")
@@ -55,22 +54,15 @@ def vista():#vista de la aplicacion
                                ,text_color="#023e8a", anchor="w", justify="center", font=("Comic Sans MS", 12)).pack(anchor="center", 
                                                                                                                      padx=(5, 5))
 
-    botonCargar= CTkButton(master=contenedor_pequeno, text="Cargar archivo", fg_color = AzulMasClaro, 
+    botonCargar= CTkButton(master=contenedor_pequeno, text="Cargar archivo y ejecutar", fg_color = AzulMasClaro, 
                            border_color=azulClaro, border_width=4, corner_radius=10, 
                            hover_color=AzulVerdoso, 
                            font=("Segoe UI Black", 16), text_color=azulClaro, 
-                           width=350,command=lambda: main(contenedor_pequeno),
+                           width=350,command=lambda: main(contenedor_pequeno,contenido),
                            image=CTkImage(dark_image=imagenAbrir, light_image=imagenAbrir)).pack(anchor="center", 
                                                                                                  pady=(10, 10), 
                                                                                                  padx=(25, 25))
-    botonMostrar= CTkButton(master=contenedor_pequeno, text="Mostrar archivo", fg_color = AzulMasClaro, 
-                           border_color=azulClaro, border_width=4, corner_radius=10, 
-                           hover_color=AzulVerdoso, 
-                           font=("Segoe UI Black", 16), text_color=azulClaro, 
-                           width=350,
-                           image=CTkImage(dark_image=imagenMostrar, light_image=imagenMostrar)).pack(anchor="center", 
-                                                                                                 pady=(10, 10), 
-                                                                                                 padx=(25, 25))
+    
 
     ########################################################################
     #Función para los gifs
@@ -137,7 +129,7 @@ def leer_matriz(filename):#lee la matriz del archivo de texto plano
         with open(filename, 'r') as archivo:
             contenido = archivo.read().strip()
         matriz = [list(map(int, fila.split())) for fila in contenido.split('\n')]
-        return matriz
+        return matriz,contenido
     except Exception as e:
         print(f"Error al leer la matriz desde el archivo: {e}")
         return []
@@ -187,7 +179,7 @@ def escribir_matriz(filename, matriz):#escribe la matriz en el archivo de texto 
             archivo.write(' '.join(map(str, fila)) + '\n')
 
 
-def main(contenedor_pequeno):#funcion principal
+def main(contenedor_pequeno,contenido):#funcion principal
     try:
         print("Selecciona el archivo")
         archivo = ubicaciontxt()
@@ -195,7 +187,7 @@ def main(contenedor_pequeno):#funcion principal
             print("No se ha seleccionado ningún archivo.")
             return
 
-        matriz = leer_matriz(archivo)
+        matriz,contenido = leer_matriz(archivo)
         if not matriz:
             print("La matriz no pudo ser leída o estaba vacía.")
             return
@@ -206,15 +198,22 @@ def main(contenedor_pequeno):#funcion principal
         escribir_matriz('salida.txt', matriz_s)
         contenido_salida = open('salida.txt', 'r').read()
         #print(contenido_salida)  # Para verificar el contenido de salida.txt
-
+        
         # Cierra la ventana de la aplicación
         uwu=CTkLabel(master=contenedor_pequeno, 
-                               text=contenido_salida
+                               text=contenido
                                ,text_color="#023e8a", anchor="w", justify="center", font=("Comic Sans MS", 12)).pack(anchor="center", 
-                                                                                                                     padx=(5, 5), pady=(11, 11))
-
+                                                                                                                     padx=(5, 5), pady=(10, 10))
+        maulopez = CTkLabel(master=contenedor_pequeno, 
+                            text=contenido_salida
+                            ,text_color="#023e8a", anchor="w", justify="center", font=("Comic Sans MS", 12)).pack(anchor="center", padx=(5, 5), pady=(16, 16))
+        
         # Abre el archivo de salida en el programa predeterminado del sistema
         os.startfile('salida.txt')
+
     except Exception as e:
         print("")
-vista()
+
+vista("","")
+    
+
