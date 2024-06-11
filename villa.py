@@ -25,7 +25,7 @@ def vista(contenido):#vista de la aplicacion
     ventana = CTk()
     ventana.title("Proyecto Final de ADA")
     ventana.configure(bg= "#051923")
-    ventana.geometry("900x480")
+    ventana.geometry("900x390")
     ventana.resizable(width=False, height=False)
 
     #Colores
@@ -195,18 +195,14 @@ def main(contenedor_pequeno,contenido):#funcion principal
         matriz_s = crear_matriz_s(color, max_color, n)
         escribir_matriz('salida.txt', matriz_s)
         contenido_salida = open('salida.txt', 'r').read()
-        #print(contenido_salida)  # Para verificar el contenido de salida.txt
-        
-        
-
         # Cierra la ventana de la aplicación
 
         mostrarentrada=CTkLabel(master=contenedor_pequeno, 
-                               text="entrada\n"+contenido
+                               text="ENTRADA\n"+contenido
                                ,text_color="#023e8a", anchor="w", justify="center", font=("Comic Sans MS", 12)).pack(anchor="center", 
                                                                                                                      padx=(5, 5), pady=(10, 10))
         mostrarsalida = CTkLabel(master=contenedor_pequeno, 
-                            text="salida\n"+contenido_salida
+                            text="SALIDA\n\n SELECCIONES\n"+contenido_salida
                             ,text_color="#023e8a", anchor="w", justify="center", font=("Comic Sans MS", 12)).pack(anchor="center", padx=(5, 5), pady=(16, 16))
         
         # Abre el archivo de salida en el programa predeterminado del sistema
